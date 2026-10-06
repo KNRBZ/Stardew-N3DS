@@ -56,11 +56,13 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp "$GITHUB_WORKSPACE/stardew-n3ds.cia" /tmp/stardew-n3ds.cia
+          cp "$GITHUB_WORKSPACE/stardew-n3ds.3dsx" /tmp/stardew-n3ds.3dsx
           git fetch origin gh-pages || true
           git checkout --orphan gh-pages
           git rm -rf . || true
-          cp "$GITHUB_WORKSPACE/stardew-n3ds.cia" ./stardew-n3ds.cia
-          cp "$GITHUB_WORKSPACE/stardew-n3ds.3dsx" ./stardew-n3ds.3dsx
+          cp /tmp/stardew-n3ds.cia ./stardew-n3ds.cia
+          cp /tmp/stardew-n3ds.3dsx ./stardew-n3ds.3dsx
           git add stardew-n3ds.cia stardew-n3ds.3dsx
           git commit -m "Publish latest N3DS build"
           git push --force origin gh-pages
