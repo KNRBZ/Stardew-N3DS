@@ -13,8 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build
-        run: make
+      - name: Build 3DSX and CIA
+        run: make cia
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -24,3 +24,4 @@ jobs:
             stardew-n3ds.3dsx
             stardew-n3ds.smdh
             stardew-n3ds.elf
+            stardew-n3ds.cia
