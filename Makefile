@@ -79,10 +79,26 @@ ifeq ($(strip $(NO_SMDH)),)
 export _3DSXFLAGS += --smdh=$(CURDIR)/$(TARGET).smdh
 endif
 
-.PHONY: all clean
+.PHONY: all cia clean
+
+CIA_BANNER_B64 := $(TOPDIR)/assets/banner.b64
+CIA_BANNER_PNG := $(BUILD)/banner.png
+CIA_BANNER_BNR := $(BUILD)/banner.bnr
 
 all: $(BUILD) $(GFXBUILD) $(DEPSDIR)
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+
+cia: all $(OUTPUT).cia
+
+$(CIA_BANNER_PNG): $(CIA_BANNER_B64) | $(BUILD)
+	@base64 -d $(CIA_BANNER_B64) > $@
+
+$(CIA_BANNER_BNR): $(CIA_BANNER_PNG)
+	@bannertool makebanner -i $< -o $@
+
+$(OUTPUT).cia: $(OUTPUT).elf $(OUTPUT).smdh $(CIA_BANNER_BNR)
+	@makerom -f cia -o $@ -target t -exefslogo -elf $(OUTPUT).elf -icon $(OUTPUT).smdh -banner $(CIA_BANNER_BNR) -desc app:4 -major 1 -minor 0 -micro 0
+	@echo built ... $(notdir $@)
 
 $(BUILD):
 	@mkdir -p $@
@@ -99,7 +115,7 @@ endif
 
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).3dsx $(TARGET).smdh $(TARGET).elf
+	@rm -fr $(BUILD) $(TARGET).3dsx $(TARGET).smdh $(TARGET).elf $(TARGET).cia
 
 else
 
