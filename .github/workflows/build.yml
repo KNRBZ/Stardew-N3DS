@@ -20,8 +20,23 @@ jobs:
       - name: Install 3DS tools
         run: dkp-pacman -S --noconfirm 3dstools
 
+      - name: Install bannertool and makerom
+        run: |
+          curl -sSL -o /tmp/bannertool.zip https://github.com/Epicpkmn11/bannertool/releases/download/v1.2.2/bannertool.zip
+          echo "e4259c08fe8944ebadd5f4b96f9a8603e5427338074cfc46323fbbc3410d51ed  /tmp/bannertool.zip" | sha256sum -c -
+          unzip -oj /tmp/bannertool.zip 'linux-x86_64/bannertool' -d /usr/local/bin
+          chmod +x /usr/local/bin/bannertool
+
+          curl -sSL -o /tmp/makerom.zip https://github.com/3DSGuy/Project_CTR/releases/download/makerom-v0.17/makerom-v0.17-ubuntu_x86_64.zip
+          echo "976c17a78617e157083a8e342836d35c47a45940f9d0209ee8fd210a81ba7bc0  /tmp/makerom.zip" | sha256sum -c -
+          unzip -oj /tmp/makerom.zip makerom -d /usr/local/bin
+          chmod +x /usr/local/bin/makerom
+
+          command -v bannertool
+          command -v makerom
+
       - name: Build 3DSX and CIA
-        run: export PATH="/opt/devkitpro/tools/bin:$PATH" && make cia
+        run: make cia
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
