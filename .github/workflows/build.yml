@@ -7,14 +7,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkitarm:20260610
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install devkitPro
-        uses: devkitpro/devkitpro-pacman-action@v1
-        with:
-          packages: 3ds-dev
 
       - name: Build
         run: make
@@ -23,4 +20,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: stardew-n3ds
-          path: build/
+          path: |
+            stardew-n3ds.3dsx
+            stardew-n3ds.smdh
+            stardew-n3ds.elf
