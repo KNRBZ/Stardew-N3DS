@@ -2,7 +2,11 @@ name: Build N3DS
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -25,3 +29,24 @@ jobs:
             stardew-n3ds.smdh
             stardew-n3ds.elf
             stardew-n3ds.cia
+
+      - name: Publish CIA to gh-pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages || true
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git checkout --orphan gh-pages
+            git rm -rf . || true
+          else
+            git checkout --orphan gh-pages
+          fi
+          cp "$GITHUB_WORKSPACE/stardew-n3ds.cia" ./stardew-n3ds.cia
+          cp "$GITHUB_WORKSPACE/stardew-n3ds.3dsx" ./stardew-n3ds.3dsx
+          git add stardew-n3ds.cia stardew-n3ds.3dsx
+          git commit -m "Publish latest N3DS build"
+          git push --force origin gh-pages
