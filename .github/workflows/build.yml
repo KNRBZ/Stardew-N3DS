@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install 3DS tools
+        run: dkp-pacman -S --noconfirm 3dstools
+
       - name: Build 3DSX and CIA
         run: make cia
 
@@ -39,12 +42,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin gh-pages || true
-          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
-            git checkout --orphan gh-pages
-            git rm -rf . || true
-          else
-            git checkout --orphan gh-pages
-          fi
+          git checkout --orphan gh-pages
+          git rm -rf . || true
           cp "$GITHUB_WORKSPACE/stardew-n3ds.cia" ./stardew-n3ds.cia
           cp "$GITHUB_WORKSPACE/stardew-n3ds.3dsx" ./stardew-n3ds.3dsx
           git add stardew-n3ds.cia stardew-n3ds.3dsx
