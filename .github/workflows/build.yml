@@ -1,0 +1,26 @@
+name: Build N3DS
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install devkitPro
+        uses: devkitpro/devkitpro-pacman-action@v1
+        with:
+          packages: 3ds-dev
+
+      - name: Build
+        run: make
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stardew-n3ds
+          path: build/
