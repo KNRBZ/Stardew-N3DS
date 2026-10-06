@@ -1,0 +1,10 @@
+build/
+*.3dsx
+*.cia
+*.3ds
+*.elf
+*.smdh
+*.3dsx.map
+.vscode/
+.idea/
+.DS_Store
