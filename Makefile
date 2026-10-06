@@ -101,7 +101,7 @@ $(CIA_BANNER_BNR): $(CIA_BANNER_PNG) $(CIA_BANNER_WAV)
 	@bannertool makebanner -i $(CIA_BANNER_PNG) -a $(CIA_BANNER_WAV) -o $@
 
 $(OUTPUT).cia: $(OUTPUT).elf $(OUTPUT).smdh $(CIA_BANNER_BNR)
-	@makerom -f cia -o $@ -target t -exefslogo -elf $(OUTPUT).elf -icon $(OUTPUT).smdh -banner $(CIA_BANNER_BNR) -desc app:4 -major 1 -minor 0 -micro 0
+	@makerom -f cia -o $@ -rsf $(TOPDIR)/cia.rsf -target t -exefslogo -elf $(OUTPUT).elf -icon $(OUTPUT).smdh -banner $(CIA_BANNER_BNR) -major 1 -minor 0 -micro 0
 	@echo built ... $(notdir $@)
 
 $(BUILD):
