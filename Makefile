@@ -83,6 +83,7 @@ endif
 
 CIA_BANNER_B64 := $(TOPDIR)/assets/banner.b64
 CIA_BANNER_PNG := $(BUILD)/banner.png
+CIA_BANNER_WAV := $(BUILD)/banner.wav
 CIA_BANNER_BNR := $(BUILD)/banner.bnr
 
 all: $(BUILD) $(GFXBUILD) $(DEPSDIR)
@@ -93,8 +94,11 @@ cia: all $(OUTPUT).cia
 $(CIA_BANNER_PNG): $(CIA_BANNER_B64) | $(BUILD)
 	@base64 -d $(CIA_BANNER_B64) > $@
 
-$(CIA_BANNER_BNR): $(CIA_BANNER_PNG)
-	@bannertool makebanner -i $< -o $@
+$(CIA_BANNER_WAV): assets/banner.wav | $(BUILD)
+	@cp $< $@
+
+$(CIA_BANNER_BNR): $(CIA_BANNER_PNG) $(CIA_BANNER_WAV)
+	@bannertool makebanner -i $(CIA_BANNER_PNG) -a $(CIA_BANNER_WAV) -o $@
 
 $(OUTPUT).cia: $(OUTPUT).elf $(OUTPUT).smdh $(CIA_BANNER_BNR)
 	@makerom -f cia -o $@ -target t -exefslogo -elf $(OUTPUT).elf -icon $(OUTPUT).smdh -banner $(CIA_BANNER_BNR) -desc app:4 -major 1 -minor 0 -micro 0
